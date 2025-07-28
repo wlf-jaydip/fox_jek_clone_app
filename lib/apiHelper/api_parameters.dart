@@ -22,4 +22,6 @@ class ApiParameters {
   static final service_category_id_value = 5;
   static final filter_key_value = '';
   static final product_category_list = 'product_category_list';
+  static final view_all = 'view_all';
+  static final view_all_value = 0;
 }

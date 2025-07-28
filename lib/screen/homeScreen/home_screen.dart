@@ -4,7 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:staging_fox_jek_clone_app/constants/app_color.dart';
 import 'package:staging_fox_jek_clone_app/constants/app_string.dart';
 import 'package:staging_fox_jek_clone_app/constants/size_constants.dart';
+import 'package:staging_fox_jek_clone_app/screen/favoriteRestaurant/favorite_restaurants_screen.dart';
 import 'package:staging_fox_jek_clone_app/screen/homeScreen/home_bloc.dart';
+import 'package:staging_fox_jek_clone_app/utils/utils.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.colorWhite,
       appBar: AppBar(
         shadowColor: AppColors.colorBlack.withValues(alpha: 0.2),
         elevation: deviceWidth * 0.05,
@@ -107,9 +109,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           _buildCategoryList(),
           SizedBox(
-            height: deviceWidth * 0.02,
+            height: deviceWidth * 0.03,
+          ),
+          _buildSorting(),
+          SizedBox(
+            height: deviceWidth * 0.03,
           ),
           _buildFeatureFoodDelivery(),
+          SizedBox(
+            height: deviceWidth * 0.02,
+          ),
+          _buildFavoriteList(),
           SizedBox(
             height: deviceWidth * 0.051,
           ),
@@ -139,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
             floatingLabelAlignment: FloatingLabelAlignment.center,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(
-                deviceWidth * 0.048,
+                deviceWidth * 0.046,
               ),
             ),
             prefixIcon: Icon(Icons.search)),
@@ -204,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: deviceWidth * 0.03,
                   ),
                   SizedBox(
-                    height: deviceWidth * 0.012,
+                    height: averageSize * 0.000025,
                     child: ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
@@ -213,22 +223,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           return StreamBuilder(
                               stream: _homeBloc.pageIndex.stream,
                               builder: (context, pageIndexSnapshot) {
-                                return Container(
-                                  alignment: AlignmentDirectional.center,
-                                  margin: EdgeInsetsDirectional.symmetric(
-                                    horizontal: deviceWidth * 0.01,
-                                  ),
-                                  width: pageIndexSnapshot.data == (index) ? deviceWidth * 0.1 : deviceWidth * 0.025,
+                                return AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  margin: EdgeInsetsDirectional.symmetric(horizontal: averageSize * 0.00002),
+                                  width: pageIndexSnapshot.data == (index) ? averageSize * 0.00025 : averageSize * 0.00007,
                                   decoration: BoxDecoration(
+                                    borderRadius: BorderRadiusDirectional.circular(deviceWidth * 0.02),
+                                    shape: BoxShape.rectangle,
                                     color: pageIndexSnapshot.data == (index)
                                         ? AppColors.colorBlack
                                         : AppColors.colorBlack.withValues(alpha: 0.2),
-                                    borderRadius: BorderRadiusDirectional.horizontal(
-                                      start: Radius.circular(deviceWidth * 0.01),
-                                      end: Radius.circular(
-                                        deviceWidth * 0.01,
-                                      ),
-                                    ),
                                   ),
                                 );
                               });
@@ -251,10 +255,10 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: EdgeInsetsDirectional.symmetric(
                   horizontal: averageSize * 0.00009,
-                  vertical: averageSize * 0.00009,
+                  vertical: averageSize * 0.0001,
                 ),
                 child: Text('${AppString.categoryTitle}',
-                    style: TextStyle(
+                    style: GoogleFonts.lato(
                         color: AppColors.colorBlack,
                         fontSize: averageSize * 0.0001,
                         fontWeight: FontWeight.w600,
@@ -282,16 +286,595 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Flexible(
-                            child: Text(
-                              '${categorySnapshot.data?.productCategoryList?[index].productCategoryName ?? ''}',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(),
-                            ),
+                            child: Text('${categorySnapshot.data?.productCategoryList?[index].productCategoryName ?? ''}',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.lato(
+                                    color: AppColors.colorBlack,
+                                    fontSize: averageSize * 0.00007,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: deviceWidth * 0.002)),
                           )
                         ],
                       );
                     },
                   )),
+            ],
+          );
+        });
+  }
+
+  Widget _buildSorting() {
+    return StreamBuilder(
+        stream: _homeBloc.categoryList.stream,
+        builder: (context, sortingSnapshot) {
+          return SizedBox(
+              height: averageSize * 0.00022,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    ListView.builder(
+                        padding: EdgeInsetsDirectional.only(start: averageSize * 0.00005),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _homeBloc.sortingList.length,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {},
+                            child: Container(
+                              padding: EdgeInsetsDirectional.symmetric(
+                                horizontal: averageSize * 0.00005,
+                                vertical: averageSize * 0.00002,
+                              ),
+                              decoration: BoxDecoration(
+                                  color: AppColors.colorWhite,
+                                  border: Border.all(
+                                    color: AppColors.colorBlack,
+                                  ),
+                                  borderRadius: BorderRadiusDirectional.circular(averageSize * 0.0002)),
+                              margin: EdgeInsetsDirectional.symmetric(horizontal: averageSize * 0.00003),
+                              child: Center(
+                                child: index == 0
+                                    ? InkWell(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            backgroundColor: AppColors.colorWhite,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    width: deviceWidth,
+                                                    height: averageSize * 0.0023,
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          AppString.sortBy,
+                                                          style: TextStyle(
+                                                              fontSize: averageSize * 0.0001, fontWeight: FontWeight.bold),
+                                                        ),
+                                                        Divider(
+                                                          color: AppColors.colorGrey.withValues(alpha: 0.3),
+                                                          height: averageSize * 0.0002,
+                                                          thickness: averageSize * 0.000015,
+                                                        ),
+                                                        StreamBuilder(
+                                                            stream: _homeBloc.selectedValue.stream,
+                                                            builder: (context, asyncSnapshot) {
+                                                              return RadioListTile(
+                                                                  controlAffinity: ListTileControlAffinity.trailing,
+                                                                  title: Text(
+                                                                    AppString.priceHtL,
+                                                                    style: TextStyle(
+                                                                      fontSize: averageSize * 0.00008,
+                                                                      color: AppColors.colorBlack,
+                                                                    ),
+                                                                  ),
+                                                                  dense: true,
+                                                                  contentPadding: EdgeInsetsDirectional.symmetric(
+                                                                      horizontal: averageSize * 0.00008),
+                                                                  value: AppString.priceHtL,
+                                                                  groupValue: asyncSnapshot.data,
+                                                                  visualDensity: VisualDensity.compact,
+                                                                  activeColor: AppColors.colorGreen,
+                                                                  autofocus: true,
+                                                                  selectedTileColor: AppColors.colorGreen,
+                                                                  onChanged: (value) {
+                                                                    _homeBloc.selectSortingValues(value!);
+                                                                  });
+                                                            }),
+                                                        StreamBuilder(
+                                                            stream: _homeBloc.selectedValue.stream,
+                                                            builder: (context, asyncSnapshot) {
+                                                              return RadioListTile(
+                                                                  controlAffinity: ListTileControlAffinity.trailing,
+                                                                  activeColor: AppColors.colorGreen,
+                                                                  dense: true,
+                                                                  visualDensity: VisualDensity.compact,
+                                                                  contentPadding: EdgeInsetsDirectional.symmetric(
+                                                                      horizontal: averageSize * 0.00008),
+                                                                  title: Text(
+                                                                    AppString.priceLtH,
+                                                                    style: TextStyle(
+                                                                      fontSize: averageSize * 0.00008,
+                                                                      color: AppColors.colorBlack,
+                                                                    ),
+                                                                  ),
+                                                                  value: AppString.priceLtH,
+                                                                  groupValue: asyncSnapshot.data,
+                                                                  onChanged: (value) {
+                                                                    _homeBloc.selectSortingValues(value!);
+                                                                  });
+                                                            }),
+                                                        StreamBuilder(
+                                                            stream: _homeBloc.selectedValue.stream,
+                                                            builder: (context, asyncSnapshot) {
+                                                              return RadioListTile(
+                                                                  controlAffinity: ListTileControlAffinity.trailing,
+                                                                  dense: true,
+                                                                  visualDensity: VisualDensity.compact,
+                                                                  contentPadding: EdgeInsetsDirectional.symmetric(
+                                                                      horizontal: averageSize * 0.00008),
+                                                                  title: Text(
+                                                                    AppString.priceNearBy,
+                                                                    style: TextStyle(
+                                                                      fontSize: averageSize * 0.00008,
+                                                                      color: AppColors.colorBlack,
+                                                                    ),
+                                                                  ),
+                                                                  value: AppString.priceNearBy,
+                                                                  groupValue: asyncSnapshot.data,
+                                                                  activeColor: AppColors.colorGreen,
+                                                                  onChanged: (value) {
+                                                                    _homeBloc.selectSortingValues(value!);
+                                                                  });
+                                                            }),
+                                                        StreamBuilder(
+                                                            stream: _homeBloc.selectedValue.stream,
+                                                            builder: (context, asyncSnapshot) {
+                                                              return RadioListTile(
+                                                                  controlAffinity: ListTileControlAffinity.trailing,
+                                                                  dense: true,
+                                                                  visualDensity: VisualDensity.compact,
+                                                                  activeColor: AppColors.colorGreen,
+                                                                  contentPadding: EdgeInsetsDirectional.symmetric(
+                                                                      horizontal: averageSize * 0.00008),
+                                                                  title: Text(
+                                                                    AppString.DeliveryTime,
+                                                                    style: TextStyle(
+                                                                      fontSize: averageSize * 0.00008,
+                                                                      color: AppColors.colorBlack,
+                                                                    ),
+                                                                  ),
+                                                                  value: AppString.DeliveryTime,
+                                                                  groupValue: asyncSnapshot.data,
+                                                                  onChanged: (value) {
+                                                                    _homeBloc.selectSortingValues(value!);
+                                                                  });
+                                                            }),
+                                                        StreamBuilder(
+                                                            stream: _homeBloc.selectedValue.stream,
+                                                            builder: (context, asyncSnapshot) {
+                                                              return RadioListTile(
+                                                                  controlAffinity: ListTileControlAffinity.trailing,
+                                                                  dense: true,
+                                                                  visualDensity: VisualDensity.compact,
+                                                                  contentPadding: EdgeInsetsDirectional.symmetric(
+                                                                      horizontal: averageSize * 0.00008),
+                                                                  title: Text(
+                                                                    AppString.ratting,
+                                                                    style: TextStyle(
+                                                                      fontSize: averageSize * 0.00008,
+                                                                      color: AppColors.colorBlack,
+                                                                    ),
+                                                                  ),
+                                                                  value: AppString.ratting,
+                                                                  groupValue: asyncSnapshot.data,
+                                                                  activeColor: AppColors.colorGreen,
+                                                                  onChanged: (value) {
+                                                                    _homeBloc.selectSortingValues(value!);
+                                                                  });
+                                                            }),
+                                                        SizedBox(
+                                                          height: averageSize * 0.00015,
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: averageSize * 0.0001,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                Navigator.pop(context);
+                                                              },
+                                                              child: Container(
+                                                                width: averageSize * 0.00094,
+                                                                padding: EdgeInsetsDirectional.symmetric(
+                                                                    vertical: averageSize * 0.00005),
+                                                                decoration: BoxDecoration(
+                                                                    color: AppColors.colorWhite,
+                                                                    borderRadius: BorderRadiusDirectional.circular(
+                                                                      averageSize * 0.00008,
+                                                                    ),
+                                                                    border: Border.all(color: AppColors.colorBlack)),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    AppString.clear,
+                                                                    style: TextStyle(fontSize: averageSize * 0.00008),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: averageSize * 0.0001,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                Navigator.pop(context);
+                                                              },
+                                                              child: Container(
+                                                                width: averageSize * 0.00094,
+                                                                padding: EdgeInsetsDirectional.symmetric(
+                                                                    vertical: averageSize * 0.00005),
+                                                                decoration: BoxDecoration(
+                                                                  color: AppColors.colorGreen,
+                                                                  borderRadius: BorderRadiusDirectional.circular(
+                                                                    averageSize * 0.00008,
+                                                                  ),
+                                                                ),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    AppString.applyFilter,
+                                                                    style: TextStyle(
+                                                                        color: AppColors.colorWhite,
+                                                                        fontSize: averageSize * 0.00008),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(_homeBloc.sortingList[index],
+                                                style: GoogleFonts.lato(
+                                                    color: AppColors.colorBlack,
+                                                    fontSize: averageSize * 0.00008,
+                                                    fontWeight: FontWeight.w600,
+                                                    letterSpacing: deviceWidth * 0.002)),
+                                            Icon(Icons.arrow_drop_down_sharp)
+                                          ],
+                                        ),
+                                      )
+                                    : Text(
+                                        _homeBloc.sortingList[index],
+                                        style: GoogleFonts.lato(
+                                            color: AppColors.colorBlack,
+                                            fontSize: averageSize * 0.00008,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: deviceWidth * 0.002),
+                                      ),
+                              ),
+                            ),
+                          );
+                        }),
+                    ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: sortingSnapshot.data?.productCategoryList?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {},
+                            child: Container(
+                              padding: EdgeInsetsDirectional.symmetric(
+                                horizontal: averageSize * 0.00005,
+                              ),
+                              decoration: BoxDecoration(
+                                  color: AppColors.colorWhite,
+                                  border: Border.all(
+                                    color: AppColors.colorBlack,
+                                  ),
+                                  borderRadius: BorderRadiusDirectional.circular(averageSize * 0.0002)),
+                              margin: EdgeInsetsDirectional.symmetric(horizontal: averageSize * 0.00003),
+                              child: Center(
+                                child: Text(
+                                  '${sortingSnapshot.data?.productCategoryList?[index].productCategoryName ?? ''}',
+                                  style: GoogleFonts.lato(
+                                      color: AppColors.colorBlack,
+                                      fontSize: averageSize * 0.00008,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: deviceWidth * 0.002),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ],
+                ),
+              ));
+        });
+  }
+
+  Widget _buildFavoriteList() {
+    return StreamBuilder(
+        stream: _homeBloc.favoriteList.stream,
+        builder: (context, favoriteSnapshot) {
+          if (!favoriteSnapshot.hasData) {
+            return SizedBox.shrink();
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: averageSize * 0.00009,
+                  vertical: averageSize * 0.00009,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('${favoriteSnapshot.data?.displayTitleName ?? AppString.favorite}',
+                        style: GoogleFonts.lato(
+                            color: AppColors.colorBlack,
+                            fontSize: averageSize * 0.0001,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: deviceWidth * 0.002)),
+                    InkWell(
+                      onTap: () {
+                        navigateToPush(
+                            context,
+                            FavoriteRestaurantsScreen(
+                              favoriteModal: favoriteSnapshot.data,
+                            ));
+                      },
+                      child: Container(
+                        padding: EdgeInsetsDirectional.symmetric(
+                          horizontal: averageSize * 0.00005,
+                          vertical: averageSize * 0.00001,
+                        ),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.colorBlack.withValues(alpha: 0.5), width: averageSize * 0.000008),
+                            borderRadius: BorderRadiusDirectional.circular(averageSize * 0.0002)),
+                        child: Text('${AppString.viewAll}',
+                            style: GoogleFonts.lato(
+                                color: AppColors.colorBlack,
+                                fontSize: averageSize * 0.00006,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: deviceWidth * 0.002)),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: averageSize * 0.0013,
+                child: ListView.builder(
+                    padding: EdgeInsetsDirectional.symmetric(horizontal: averageSize * 0.00005),
+                    itemCount:
+                        (favoriteSnapshot.data?.storeLists?.length ?? 0) > 3 ? 3 : favoriteSnapshot.data?.storeLists?.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        width: averageSize * 0.00085,
+                        decoration: BoxDecoration(
+                          color: AppColors.colorWhite,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.colorGrey.withValues(alpha: 0.5),
+                              offset: Offset(0.0, 0.5),
+                              blurRadius: 3,
+                            ),
+                            BoxShadow(
+                              color: AppColors.colorGrey.withValues(alpha: 0.5),
+                              offset: Offset(0.0, 0.5),
+                              blurRadius: 3,
+                            ),
+                          ],
+                          borderRadius: BorderRadiusDirectional.circular(
+                            averageSize * 0.0001,
+                          ),
+                        ),
+                        margin: EdgeInsetsDirectional.symmetric(
+                          horizontal: averageSize * 0.00005,
+                          vertical: averageSize * 0.00001,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadiusDirectional.circular(
+                                averageSize * 0.0001,
+                              ),
+                              child: Stack(
+                                children: [
+                                  Image.network(
+                                    '${favoriteSnapshot.data?.storeLists?[index].storeBanner ?? ''}',
+                                    fit: BoxFit.fill,
+                                    width: averageSize * 0.00085,
+                                    height: averageSize * 0.0006,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        height: averageSize * 0.001,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withValues(alpha: 0.1),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  (favoriteSnapshot.data?.storeLists?[index].offerType) != 0
+                                      ? Container(
+                                          margin: EdgeInsetsDirectional.only(
+                                            top: averageSize * 0.0002,
+                                            start: averageSize * 0.000051,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                                colors: [AppColors.colorBlack, AppColors.colorBlack.withValues(alpha: 0.01)],
+                                                end: AlignmentDirectional.topCenter,
+                                                begin: AlignmentDirectional.bottomCenter,
+                                                tileMode: TileMode.decal),
+                                          ),
+                                          width: averageSize * 0.00075,
+                                          height: averageSize * 0.0004,
+                                          child: Align(
+                                            alignment: AlignmentDirectional.bottomCenter,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Text(
+                                                  '\$${favoriteSnapshot.data?.storeLists?[index].offerAmount ?? ''} % Off ',
+                                                  textAlign: TextAlign.start,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: GoogleFonts.lato(
+                                                      color: AppColors.colorWhite,
+                                                      fontSize: averageSize * 0.00008,
+                                                      fontWeight: FontWeight.w600,
+                                                      letterSpacing: deviceWidth * 0.002),
+                                                ),
+                                                Text(
+                                                  'Order above \$${favoriteSnapshot.data?.storeLists?[index].offerMinAmount ?? ''}',
+                                                  textAlign: TextAlign.start,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: GoogleFonts.lato(
+                                                      color: AppColors.colorWhite,
+                                                      fontSize: averageSize * 0.00006,
+                                                      fontWeight: FontWeight.w600,
+                                                      letterSpacing: deviceWidth * 0.002),
+                                                ),
+                                                SizedBox(
+                                                  height: deviceWidth * 0.005,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: averageSize * 0.00005,
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.only(start: averageSize * 0.00006),
+                              child: Text(
+                                '${(favoriteSnapshot.data?.storeLists?[index].storeName) ?? '-'}',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: GoogleFonts.lato(
+                                    color: AppColors.colorBlack,
+                                    fontSize: averageSize * 0.0001,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: deviceWidth * 0.002),
+                              ),
+                            ),
+                            SizedBox(
+                              height: averageSize * 0.00002,
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.only(start: deviceWidth * 0.03),
+                              child: Text('${favoriteSnapshot.data?.storeLists?[index].storeProducts ?? '-'}',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: GoogleFonts.lato(
+                                    color: AppColors.colorBlack,
+                                    fontSize: averageSize * 0.00008,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                            ),
+                            SizedBox(
+                              height: averageSize * 0.00002,
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.only(start: deviceWidth * 0.03),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.watch_later_outlined,
+                                    size: averageSize * 0.00008,
+                                    color: AppColors.colorBlack,
+                                  ),
+                                  SizedBox(
+                                    width: averageSize * 0.00002,
+                                  ),
+                                  Flexible(
+                                    flex: 2,
+                                    child: Text(
+                                        '${(favoriteSnapshot.data?.storeLists?[index].orderDeliveryTime ?? '-') == 0 ? '-' : '${favoriteSnapshot.data?.storeLists?[index].orderDeliveryTime} ${AppString.min}'} ',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: GoogleFonts.lato(
+                                          color: AppColors.colorBlack,
+                                          fontSize: averageSize * 0.00008,
+                                          fontWeight: FontWeight.w600,
+                                        )),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.only(start: deviceWidth * 0.03),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    size: averageSize * 0.00009,
+                                    color: AppColors.amber,
+                                  ),
+                                  SizedBox(
+                                    width: averageSize * 0.00002,
+                                  ),
+                                  Flexible(
+                                    flex: 1,
+                                    child: Text(
+                                        '${(favoriteSnapshot.data?.storeLists?[index].averageRatings ?? '-') == 0 ? '-' : favoriteSnapshot.data?.storeLists?[index].averageRatings}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: GoogleFonts.lato(
+                                          color: AppColors.colorBlack,
+                                          fontSize: averageSize * 0.00008,
+                                          fontWeight: FontWeight.w600,
+                                        )),
+                                  ),
+                                  Flexible(
+                                      flex: 2,
+                                      child: Text(
+                                          '${(favoriteSnapshot.data?.storeLists?[index].noOfRatings ?? '-') == 0 ? '-' : '(${favoriteSnapshot.data?.storeLists?[index].noOfRatings})'}',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: GoogleFonts.lato(
+                                              color: AppColors.colorBlack,
+                                              fontSize: averageSize * 0.00008,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: deviceWidth * 0.002))),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    }),
+              ),
             ],
           );
         });
@@ -303,6 +886,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, foodDeliverySnapshot) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.symmetric(
@@ -310,14 +894,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   vertical: averageSize * 0.00006,
                 ),
                 child: Text(AppString.featureFoodDelivery,
-                    style: TextStyle(
+                    style: GoogleFonts.lato(
                         color: AppColors.colorBlack,
                         fontSize: averageSize * 0.0001,
                         fontWeight: FontWeight.w600,
                         letterSpacing: deviceWidth * 0.002)),
               ),
               SizedBox(
-                  height: averageSize * 0.0013,
+                  height: averageSize * 0.0014,
                   child: GridView.builder(
                     padding: EdgeInsetsDirectional.symmetric(horizontal: deviceWidth * 0.05),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -329,173 +913,179 @@ class _HomeScreenState extends State<HomeScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?.length ?? 0,
                     itemBuilder: (context, index) {
-                      return Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadiusDirectional.circular(deviceWidth * 0.05),
-                            child: ColorFiltered(
-                              colorFilter:
-                                  (foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].storeStatus ?? '') == 0
-                                      ? ColorFilter.mode(
-                                          Colors.grey.withValues(alpha: 0.9),
-                                          BlendMode.hue,
-                                        )
-                                      : ColorFilter.mode(
-                                          Colors.transparent,
-                                          BlendMode.color,
-                                        ),
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    '${foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].storeImage ?? ''}',
-                                    width: averageSize * 0.00063,
-                                    height: averageSize * 0.00063,
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        width: averageSize * 0.0006,
-                                        height: averageSize * 0.0006,
-                                        decoration: BoxDecoration(
-                                          color: Colors.black.withValues(
-                                            alpha: 0.1,
+                      return SizedBox(
+                        height: averageSize * 0.0014,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadiusDirectional.circular(deviceWidth * 0.04),
+                              child: ColorFiltered(
+                                colorFilter:
+                                    (foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].storeStatus ?? '') == 0
+                                        ? ColorFilter.mode(
+                                            Colors.grey.withValues(alpha: 0.9),
+                                            BlendMode.hue,
+                                          )
+                                        : ColorFilter.mode(
+                                            Colors.transparent,
+                                            BlendMode.color,
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  (foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].offerType) != 0
-                                      ? Align(
-                                          alignment: AlignmentDirectional.bottomCenter,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                  colors: [AppColors.colorBlack, AppColors.colorBlack.withValues(alpha: 0.01)],
-                                                  end: AlignmentDirectional.topCenter,
-                                                  begin: AlignmentDirectional.bottomCenter,
-                                                  tileMode: TileMode.decal),
-                                            ),
-                                            width: averageSize * 0.00063,
-                                            height: averageSize * 0.0004,
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional.symmetric(
-                                                    horizontal: averageSize * 0.00004,
-                                                  ),
-                                                  child: Text(
-                                                    '\$${foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].offerAmount ?? ''} % Off ',
-                                                    textAlign: TextAlign.start,
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize: deviceWidth * 0.044,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: AppColors.colorWhite),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional.only(
-                                                      start: averageSize * 0.00004, bottom: averageSize * 0.00006),
-                                                  child: Text(
-                                                    'Order above \$${foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].offerMinAmount ?? ''}',
-                                                    textAlign: TextAlign.start,
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize: averageSize * 0.00006,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: AppColors.colorWhite),
-                                                  ),
-                                                ),
-                                              ],
+                                child: Stack(
+                                  children: [
+                                    Image.network(
+                                      '${foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].storeImage ?? ''}',
+                                      width: averageSize * 0.00065,
+                                      height: averageSize * 0.00068,
+                                      fit: BoxFit.fill,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Container(
+                                          width: averageSize * 0.00065,
+                                          height: averageSize * 0.00068,
+                                          decoration: BoxDecoration(
+                                            color: Colors.black.withValues(
+                                              alpha: 0.1,
                                             ),
                                           ),
-                                        )
-                                      : Container(),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: averageSize * 0.00011,
-                          ),
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: averageSize * 0.001,
-                                child: Text(
-                                  '${foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].storeName ?? ''} ',
-                                  textAlign: TextAlign.start,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: averageSize * 0.0001, fontWeight: FontWeight.bold),
+                                        );
+                                      },
+                                    ),
+                                    (foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].offerType) != 0
+                                        ? Align(
+                                            alignment: AlignmentDirectional.bottomCenter,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                    colors: [AppColors.colorBlack, AppColors.colorBlack.withValues(alpha: 0.01)],
+                                                    end: AlignmentDirectional.topCenter,
+                                                    begin: AlignmentDirectional.bottomCenter,
+                                                    tileMode: TileMode.decal),
+                                              ),
+                                              width: averageSize * 0.00065,
+                                              height: averageSize * 0.0004,
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsetsDirectional.symmetric(
+                                                      horizontal: averageSize * 0.00004,
+                                                    ),
+                                                    child: Text(
+                                                        '\$${foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].offerAmount ?? ''} % Off ',
+                                                        textAlign: TextAlign.start,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: GoogleFonts.lato(
+                                                            color: AppColors.colorWhite,
+                                                            fontSize: averageSize * 0.0001,
+                                                            fontWeight: FontWeight.w600,
+                                                            letterSpacing: deviceWidth * 0.002)),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsetsDirectional.only(
+                                                        start: averageSize * 0.00004, bottom: averageSize * 0.00006),
+                                                    child: Text(
+                                                        'Order above \$${foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].offerMinAmount ?? ''}',
+                                                        textAlign: TextAlign.start,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: GoogleFonts.lato(
+                                                            color: AppColors.colorWhite,
+                                                            fontSize: averageSize * 0.00006,
+                                                            fontWeight: FontWeight.w600,
+                                                            letterSpacing: deviceWidth * 0.002)),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        : Container(),
+                                  ],
                                 ),
                               ),
-                              SizedBox(
-                                height: averageSize * 0.00005,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    Icons.watch_later_outlined,
-                                    size: averageSize * 0.00008,
-                                    color: AppColors.colorBlack.withValues(alpha: 0.5),
-                                  ),
-                                  SizedBox(
-                                    width: averageSize * 0.00002,
-                                  ),
-                                  Text(
-                                      '${foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].etaDeliveryTime ?? ''} ${AppString.min}',
-                                      style: TextStyle(
-                                        color: AppColors.colorBlack.withValues(alpha: 0.5),
-                                        fontSize: deviceWidth * 0.035,
-                                        fontWeight: FontWeight.w500,
+                            ),
+                            SizedBox(
+                              width: averageSize * 0.00011,
+                            ),
+                            Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: averageSize * 0.001,
+                                  child: Text(
+                                      '${foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].storeName ?? ''} ',
+                                      textAlign: TextAlign.start,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.lato(
+                                        color: AppColors.colorBlack,
+                                        fontSize: averageSize * 0.0001,
+                                        fontWeight: FontWeight.w600,
                                       )),
-                                ],
-                              ),
-                              SizedBox(
-                                height: averageSize * 0.00003,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    size: averageSize * 0.00009,
-                                    color: AppColors.amber,
-                                  ),
-                                  SizedBox(
-                                    width: averageSize * 0.00002,
-                                  ),
-                                  Text(
-                                      '${(foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].averageRatings ?? '-') == 0 ? '-' : foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].averageRatings}',
-                                      style: TextStyle(
-                                        color: AppColors.colorBlack.withValues(alpha: 0.5),
-                                        fontSize: deviceWidth * 0.03,
-                                        fontWeight: FontWeight.w500,
-                                      )),
-                                  SizedBox(
-                                    width: averageSize * 0.00002,
-                                  ),
-                                  Text(
-                                      '${(foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].noOfRatings ?? '-') == 0 ? '-' : '(${foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].noOfRatings})'}',
-                                      style: TextStyle(
-                                        color: AppColors.colorBlack.withValues(alpha: 0.5),
-                                        fontSize: deviceWidth * 0.03,
-                                        fontWeight: FontWeight.w500,
-                                      )),
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
+                                ),
+                                SizedBox(
+                                  height: averageSize * 0.00005,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      Icons.watch_later_outlined,
+                                      size: averageSize * 0.00008,
+                                      color: AppColors.colorBlack,
+                                    ),
+                                    SizedBox(
+                                      width: averageSize * 0.00002,
+                                    ),
+                                    Text(
+                                        '${foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].etaDeliveryTime ?? ''} ${AppString.min}',
+                                        style: GoogleFonts.lato(
+                                            color: AppColors.colorBlack,
+                                            fontSize: averageSize * 0.00007,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: deviceWidth * 0.002)),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: averageSize * 0.00003,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      Icons.star,
+                                      size: averageSize * 0.00009,
+                                      color: AppColors.amber,
+                                    ),
+                                    SizedBox(
+                                      width: averageSize * 0.00002,
+                                    ),
+                                    Text(
+                                        '${(foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].averageRatings ?? '-') == 0 ? '-' : foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].averageRatings}',
+                                        style: GoogleFonts.lato(
+                                          color: AppColors.colorBlack,
+                                          fontSize: averageSize * 0.00008,
+                                          fontWeight: FontWeight.w600,
+                                        )),
+                                    SizedBox(
+                                      width: averageSize * 0.00002,
+                                    ),
+                                    Text(
+                                        '${(foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].noOfRatings ?? '-') == 0 ? '-' : '(${foodDeliverySnapshot.data?.allFeatureStore?[0].storeLists?[index].noOfRatings})'}',
+                                        style: GoogleFonts.lato(
+                                          color: AppColors.colorBlack,
+                                          fontSize: averageSize * 0.00008,
+                                          fontWeight: FontWeight.w600,
+                                        )),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       );
                     },
                   )),
@@ -517,11 +1107,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   vertical: deviceWidth * 0.02,
                 ),
                 child: Text('${(snapshot.data?.displayTitleName ?? '-')}',
-                    style: TextStyle(
-                      color: AppColors.colorBlack,
-                      fontSize: averageSize * 0.0001,
-                      fontWeight: FontWeight.w600,
-                    )),
+                    style: GoogleFonts.lato(
+                        color: AppColors.colorBlack,
+                        fontSize: averageSize * 0.0001,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: deviceWidth * 0.002)),
               ),
               ListView.builder(
                   itemCount: snapshot.data?.storeList?.length ?? 0,
@@ -530,7 +1120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     return Container(
                       margin: EdgeInsetsDirectional.symmetric(
-                        vertical: averageSize * 0.00002,
+                        vertical: averageSize * 0.00006,
                         horizontal: averageSize * 0.00008,
                       ),
                       child: Column(
@@ -627,26 +1217,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                               crossAxisAlignment: CrossAxisAlignment.center,
                                               mainAxisAlignment: MainAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  '\$${snapshot.data?.storeList?[index].offerAmount ?? ''} % Off ',
-                                                  textAlign: TextAlign.start,
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontSize: averageSize * 0.00008,
-                                                      fontWeight: FontWeight.w800,
-                                                      color: AppColors.colorWhite),
-                                                ),
-                                                Text(
-                                                  'Order above \$${snapshot.data?.storeList?[index].offerMinAmount ?? ''}',
-                                                  textAlign: TextAlign.start,
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontSize: averageSize * 0.00008,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: AppColors.colorWhite),
-                                                ),
+                                                Text('\$${snapshot.data?.storeList?[index].offerAmount ?? ''} % Off ',
+                                                    textAlign: TextAlign.start,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: GoogleFonts.lato(
+                                                        color: AppColors.colorWhite,
+                                                        fontSize: averageSize * 0.00008,
+                                                        fontWeight: FontWeight.w600,
+                                                        letterSpacing: deviceWidth * 0.002)),
+                                                Text(' Order above \$${snapshot.data?.storeList?[index].offerMinAmount ?? ''}',
+                                                    textAlign: TextAlign.start,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: GoogleFonts.lato(
+                                                        color: AppColors.colorWhite,
+                                                        fontSize: averageSize * 0.00008,
+                                                        fontWeight: FontWeight.w600,
+                                                        letterSpacing: deviceWidth * 0.002)),
                                               ],
                                             ),
                                           ),
@@ -662,23 +1250,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           Padding(
                             padding: EdgeInsetsDirectional.only(start: averageSize * 0.00006),
                             child: Text('${snapshot.data?.storeList?[index].storeName ?? '-'}',
-                                style: TextStyle(
-                                  color: AppColors.colorBlack,
-                                  fontSize: deviceWidth * 0.04,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                          ),
-                          SizedBox(
-                            height: averageSize * 0.00001,
+                                style: GoogleFonts.lato(
+                                    color: AppColors.colorBlack,
+                                    fontSize: averageSize * 0.0001,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: deviceWidth * 0.002)),
                           ),
                           Padding(
                             padding: EdgeInsetsDirectional.only(start: deviceWidth * 0.03),
                             child: Text('${snapshot.data?.storeList?[index].storeProducts ?? '-'}',
-                                style: TextStyle(
-                                  color: AppColors.colorBlack.withValues(alpha: 0.5),
-                                  fontSize: deviceWidth * 0.03,
-                                  fontWeight: FontWeight.w400,
-                                )),
+                                style: GoogleFonts.lato(
+                                    color: AppColors.colorBlack.withValues(alpha: 0.5),
+                                    fontSize: averageSize * 0.00006,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: deviceWidth * 0.002)),
                           ),
                           Padding(
                             padding: EdgeInsetsDirectional.only(start: deviceWidth * 0.03),
@@ -694,21 +1279,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Text(
                                     '${(snapshot.data?.storeList?[index].orderDeliveryTime ?? '-') == 0 ? '-' : '${snapshot.data?.storeList?[index].orderDeliveryTime} ${AppString.min}'} ',
-                                    style: TextStyle(
-                                      color: AppColors.colorBlack,
-                                      fontSize: deviceWidth * 0.03,
-                                      fontWeight: FontWeight.w500,
-                                    )),
+                                    style: GoogleFonts.lato(
+                                        color: AppColors.colorBlack,
+                                        fontSize: averageSize * 0.00006,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: deviceWidth * 0.002)),
                                 SizedBox(
                                   width: averageSize * 0.000051,
                                 ),
                                 Text('|',
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: AppColors.colorBlack,
-                                      fontSize: averageSize * 0.0001,
-                                      fontWeight: FontWeight.w100,
-                                    )),
+                                    style: GoogleFonts.lato(
+                                        color: AppColors.colorBlack,
+                                        fontSize: averageSize * 0.00006,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: deviceWidth * 0.002)),
                                 SizedBox(
                                   width: averageSize * 0.00007,
                                 ),
@@ -722,18 +1307,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Text(
                                     '${(snapshot.data?.storeList?[index].averageRatings ?? '-') == 0 ? '-' : snapshot.data?.storeList?[index].averageRatings} ',
-                                    style: TextStyle(
-                                      color: AppColors.colorBlack,
-                                      fontSize: deviceWidth * 0.03,
-                                      fontWeight: FontWeight.w500,
-                                    )),
+                                    style: GoogleFonts.lato(
+                                        color: AppColors.colorBlack,
+                                        fontSize: averageSize * 0.00006,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: deviceWidth * 0.002)),
                                 Text(
                                     '${(snapshot.data?.storeList?[index].noOfRatings ?? '-') == 0 ? '-' : '(${snapshot.data?.storeList?[index].noOfRatings})'}',
-                                    style: TextStyle(
-                                      color: AppColors.colorBlack,
-                                      fontSize: deviceWidth * 0.03,
-                                      fontWeight: FontWeight.w500,
-                                    )),
+                                    style: GoogleFonts.lato(
+                                        color: AppColors.colorBlack,
+                                        fontSize: averageSize * 0.00006,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: deviceWidth * 0.002)),
                               ],
                             ),
                           )

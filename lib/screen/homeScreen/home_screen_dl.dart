@@ -348,3 +348,144 @@ class StoreLists {
     return data;
   }
 }
+
+class FavoriteModal {
+  int? status;
+  String? message;
+  int? messageCode;
+  int? serviceCategoryId;
+  String? serviceCategoryName;
+  String? serviceCategoryIcon;
+  String? displayTitleName;
+  List<StoreListsFavorite>? storeLists;
+  int? viewAllBtn;
+  int? totalPage;
+  int? perPage;
+  int? currentPage;
+
+  FavoriteModal(
+      {this.status,
+      this.message,
+      this.messageCode,
+      this.serviceCategoryId,
+      this.serviceCategoryName,
+      this.serviceCategoryIcon,
+      this.displayTitleName,
+      this.storeLists,
+      this.viewAllBtn,
+      this.totalPage,
+      this.perPage,
+      this.currentPage});
+
+  FavoriteModal.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    messageCode = json['message_code'];
+    serviceCategoryId = json['service_category_id'];
+    serviceCategoryName = json['service_category_name'];
+    serviceCategoryIcon = json['service_category_icon'];
+    displayTitleName = json['display_title_name'];
+    if (json['store_lists'] != null) {
+      storeLists = <StoreListsFavorite>[];
+      json['store_lists'].forEach((v) {
+        storeLists!.add(new StoreListsFavorite.fromJson(v));
+      });
+    }
+    viewAllBtn = json['view_all_btn'];
+    totalPage = json['total_page'];
+    perPage = json['per_page'];
+    currentPage = json['current_page'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    data['message_code'] = this.messageCode;
+    data['service_category_id'] = this.serviceCategoryId;
+    data['service_category_name'] = this.serviceCategoryName;
+    data['service_category_icon'] = this.serviceCategoryIcon;
+    data['display_title_name'] = this.displayTitleName;
+    if (this.storeLists != null) {
+      data['store_lists'] = this.storeLists!.map((v) => v.toJson()).toList();
+    }
+    data['view_all_btn'] = this.viewAllBtn;
+    data['total_page'] = this.totalPage;
+    data['per_page'] = this.perPage;
+    data['current_page'] = this.currentPage;
+    return data;
+  }
+}
+
+class StoreListsFavorite {
+  int? id;
+  int? storeId;
+  int? serviceCategoryId;
+  String? storeName;
+  String? storeProducts;
+  dynamic averageRatings;
+  dynamic orderDeliveryTime;
+  String? storeBanner;
+  String? offer;
+  dynamic orderMinAmount;
+  dynamic storeStatus;
+  dynamic offerType;
+  dynamic offerMinAmount;
+  dynamic offerAmount;
+  dynamic noOfRatings;
+
+  StoreListsFavorite(
+      {this.id,
+      this.storeId,
+      this.serviceCategoryId,
+      this.storeName,
+      this.storeProducts,
+      this.averageRatings,
+      this.orderDeliveryTime,
+      this.storeBanner,
+      this.offer,
+      this.orderMinAmount,
+      this.storeStatus,
+      this.offerType,
+      this.offerMinAmount,
+      this.offerAmount,
+      this.noOfRatings});
+
+  StoreListsFavorite.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    storeId = json['store_id'];
+    serviceCategoryId = json['service_category_id'];
+    storeName = json['store_name'];
+    storeProducts = json['store_products'];
+    averageRatings = json['average_ratings'];
+    orderDeliveryTime = json['order_delivery_time'];
+    storeBanner = json['store_banner'];
+    offer = json['offer'];
+    orderMinAmount = json['order_min_amount'];
+    storeStatus = json['store_status'];
+    offerType = json['offer_type'];
+    offerMinAmount = json['offer_min_amount'];
+    offerAmount = json['offer_amount'];
+    noOfRatings = json['no_of_ratings'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['store_id'] = this.storeId;
+    data['service_category_id'] = this.serviceCategoryId;
+    data['store_name'] = this.storeName;
+    data['store_products'] = this.storeProducts;
+    data['average_ratings'] = this.averageRatings;
+    data['order_delivery_time'] = this.orderDeliveryTime;
+    data['store_banner'] = this.storeBanner;
+    data['offer'] = this.offer;
+    data['order_min_amount'] = this.orderMinAmount;
+    data['store_status'] = this.storeStatus;
+    data['offer_type'] = this.offerType;
+    data['offer_min_amount'] = this.offerMinAmount;
+    data['offer_amount'] = this.offerAmount;
+    data['no_of_ratings'] = this.noOfRatings;
+    return data;
+  }
+}

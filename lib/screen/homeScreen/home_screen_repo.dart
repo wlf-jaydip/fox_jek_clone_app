@@ -40,4 +40,18 @@ class HomeRepo {
     });
     return foodDeliveryResponse;
   }
+
+  getFavoriteDetails() async {
+    final foodDeliveryResponse = await _apiHelper.post(ApiEndPoints.favoriteList, body: {
+      ApiParameters.user_id: ApiParameters.user_id_value,
+      ApiParameters.access_token: ApiParameters.access_token_value,
+      ApiParameters.service_category_id: ApiParameters.service_category_id_value,
+      ApiParameters.lat: ApiParameters.lat_value,
+      ApiParameters.long: ApiParameters.long_value,
+      ApiParameters.authorization: ApiParameters.authentication_value,
+      ApiParameters.device_token: ApiParameters.device_token_value,
+      ApiParameters.view_all: ApiParameters.view_all_value,
+    });
+    return foodDeliveryResponse;
+  }
 }

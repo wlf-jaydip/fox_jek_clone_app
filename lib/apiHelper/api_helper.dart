@@ -13,8 +13,8 @@ class ApiHelper {
 
   initializeDio() {
     _dio.options.baseUrl = ApiBaseUrl.baseUrl;
-    _dio.options.connectTimeout = Duration(seconds: 10);
-    _dio.options.receiveTimeout = Duration(seconds: 10);
+    _dio.options.connectTimeout = Duration(seconds: 15);
+    _dio.options.receiveTimeout = Duration(seconds: 15);
     _dio.options.headers['content-type'] = ApiParameters.applicationAndJson;
     _dio.options.headers['Authorization'] = ApiParameters.applicationAndJson;
     _dio.options.headers['select-time-zone'] = ApiParameters.asiaCalcutta;
