@@ -3,8 +3,10 @@ import 'package:staging_fox_jek_clone_app/apiHelper/api_helper.dart';
 import 'package:staging_fox_jek_clone_app/apiHelper/api_parameters.dart';
 
 class HomeRepo {
+  /// Declare object of ApiHelper
   final _apiHelper = ApiHelper();
 
+  /// this method used to get store List and slider data
   getStoreListAndSliderDetails() async {
     final storeList = await _apiHelper.post(ApiEndPoints.storeList, body: {
       ApiParameters.user_id: ApiParameters.user_id_value,
@@ -19,6 +21,7 @@ class HomeRepo {
     return storeList;
   }
 
+  /// this method used to get Category List Details
   getCategoryList() async {
     final categoryList = await _apiHelper.post(ApiEndPoints.categoryList, body: {
       ApiParameters.user_id: ApiParameters.user_id_value,
@@ -41,6 +44,7 @@ class HomeRepo {
     return foodDeliveryResponse;
   }
 
+  /// this method used to get Favorite Details
   getFavoriteDetails() async {
     final foodDeliveryResponse = await _apiHelper.post(ApiEndPoints.favoriteList, body: {
       ApiParameters.user_id: ApiParameters.user_id_value,

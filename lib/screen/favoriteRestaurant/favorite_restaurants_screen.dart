@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../constants/app_color.dart';
 import '../../constants/app_string.dart';
@@ -24,16 +25,13 @@ class _FavoriteRestaurantsScreenState extends State<FavoriteRestaurantsScreen> {
         backgroundColor: AppColors.colorWhite,
         toolbarOpacity: 0.5,
         surfaceTintColor: AppColors.colorWhite,
-        bottomOpacity: 10,
-        useDefaultSemanticsOrder: true,
         foregroundColor: AppColors.colorBlack,
-        leadingWidth: averageSize * 0.00013,
+        leadingWidth: averageSize * 0.05,
         title: Text(
           AppString.favoriteRes,
-          style: TextStyle(
-            fontSize: averageSize * 0.00009,
+          style: GoogleFonts.lato(
+            fontSize: averageSize * 0.03,
             fontWeight: FontWeight.bold,
-            letterSpacing: deviceWidth * 0.003,
             color: AppColors.colorBlack,
           ),
         ),
@@ -52,8 +50,8 @@ class _FavoriteRestaurantsScreenState extends State<FavoriteRestaurantsScreen> {
           itemBuilder: (context, index) {
             return Container(
               margin: EdgeInsetsDirectional.symmetric(
-                vertical: averageSize * 0.00006,
-                horizontal: averageSize * 0.00008,
+                vertical: averageSize * 0.02,
+                horizontal: averageSize * 0.02,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -80,7 +78,7 @@ class _FavoriteRestaurantsScreenState extends State<FavoriteRestaurantsScreen> {
                               colorBlendMode: BlendMode.luminosity,
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
-                                  height: averageSize * 0.001,
+                                  height: deviceHeight * 0.22,
                                   decoration: BoxDecoration(
                                     color: Colors.black.withValues(
                                       alpha: 0.1,
@@ -88,7 +86,7 @@ class _FavoriteRestaurantsScreenState extends State<FavoriteRestaurantsScreen> {
                                   ),
                                 );
                               },
-                              height: averageSize * 0.001,
+                              height: deviceHeight * 0.22,
                               fit: BoxFit.fill,
                               width: deviceWidth,
                             ),
@@ -139,7 +137,7 @@ class _FavoriteRestaurantsScreenState extends State<FavoriteRestaurantsScreen> {
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
-                                              fontSize: averageSize * 0.00008,
+                                              fontSize: averageSize * 0.02,
                                               fontWeight: FontWeight.bold,
                                               color: AppColors.colorWhite),
                                         ),
@@ -153,28 +151,35 @@ class _FavoriteRestaurantsScreenState extends State<FavoriteRestaurantsScreen> {
                     ],
                   ),
                   SizedBox(
-                    height: averageSize * 0.00005,
+                    height: deviceHeight * 0.01,
                   ),
                   Padding(
-                    padding: EdgeInsetsDirectional.only(start: averageSize * 0.00006),
+                    padding: EdgeInsetsDirectional.only(start: averageSize * 0.02),
                     child: Text('${widget.favoriteModal?.storeLists?[index].storeName ?? '-'}',
-                        style: TextStyle(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.lato(
                           color: AppColors.colorBlack,
-                          fontSize: deviceWidth * 0.04,
+                          fontSize: averageSize * 0.023,
                           fontWeight: FontWeight.bold,
                         )),
                   ),
                   SizedBox(
-                    height: averageSize * 0.00001,
+                    height: deviceHeight * 0.005,
                   ),
                   Padding(
                     padding: EdgeInsetsDirectional.only(start: deviceWidth * 0.03),
                     child: Text('${widget.favoriteModal?.storeLists?[index].storeProducts ?? '-'}',
-                        style: TextStyle(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.lato(
                           color: AppColors.colorBlack.withValues(alpha: 0.5),
-                          fontSize: deviceWidth * 0.03,
+                          fontSize: averageSize * 0.018,
                           fontWeight: FontWeight.w400,
                         )),
+                  ),
+                  SizedBox(
+                    height: deviceHeight * 0.01,
                   ),
                   Padding(
                     padding: EdgeInsetsDirectional.only(start: deviceWidth * 0.03),
@@ -182,53 +187,58 @@ class _FavoriteRestaurantsScreenState extends State<FavoriteRestaurantsScreen> {
                       children: [
                         Icon(
                           Icons.watch_later_outlined,
-                          size: averageSize * 0.00008,
+                          size: averageSize * 0.028,
                           color: AppColors.colorBlack,
                         ),
                         SizedBox(
-                          width: averageSize * 0.00002,
+                          width: deviceWidth * 0.01,
                         ),
-                        Text(
-                            '${(widget.favoriteModal?.storeLists?[index].orderDeliveryTime ?? '-') == 0 ? '-' : '${widget.favoriteModal?.storeLists?[index].orderDeliveryTime} Min'} ',
-                            style: TextStyle(
-                              color: AppColors.colorBlack,
-                              fontSize: deviceWidth * 0.03,
-                              fontWeight: FontWeight.w500,
-                            )),
+                        Flexible(
+                          flex: 2,
+                          child: Text(
+                              '${(widget.favoriteModal?.storeLists?[index].orderDeliveryTime ?? '-') == 0 ? '-' : '${widget.favoriteModal?.storeLists?[index].orderDeliveryTime} ${AppString.min}'} ',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: GoogleFonts.lato(
+                                color: AppColors.colorBlack,
+                                fontSize: averageSize * 0.018,
+                                fontWeight: FontWeight.w400,
+                              )),
+                        ),
                         SizedBox(
-                          width: averageSize * 0.000051,
+                          width: averageSize * 0.01,
                         ),
                         Text('|',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: GoogleFonts.lato(
                               color: AppColors.colorBlack,
-                              fontSize: averageSize * 0.0001,
-                              fontWeight: FontWeight.w100,
+                              fontSize: averageSize * 0.02,
+                              fontWeight: FontWeight.w600,
                             )),
                         SizedBox(
-                          width: averageSize * 0.00007,
+                          width: deviceWidth * 0.03,
                         ),
                         Icon(
                           Icons.star,
-                          size: averageSize * 0.00009,
+                          size: averageSize * 0.028,
                           color: AppColors.amber,
                         ),
                         SizedBox(
-                          width: averageSize * 0.00005,
+                          width: averageSize * 0.015,
                         ),
                         Text(
                             '${(widget.favoriteModal?.storeLists?[index].averageRatings ?? '-') == 0 ? '-' : widget.favoriteModal?.storeLists?[index].averageRatings} ',
-                            style: TextStyle(
+                            style: GoogleFonts.lato(
                               color: AppColors.colorBlack,
-                              fontSize: deviceWidth * 0.03,
-                              fontWeight: FontWeight.w500,
+                              fontSize: averageSize * 0.018,
+                              fontWeight: FontWeight.w400,
                             )),
                         Text(
                             '${(widget.favoriteModal?.storeLists?[index].noOfRatings ?? '-') == 0 ? '-' : '(${widget.favoriteModal?.storeLists?[index].noOfRatings})'}',
-                            style: TextStyle(
+                            style: GoogleFonts.lato(
                               color: AppColors.colorBlack,
-                              fontSize: deviceWidth * 0.03,
-                              fontWeight: FontWeight.w500,
+                              fontSize: averageSize * 0.018,
+                              fontWeight: FontWeight.w400,
                             )),
                       ],
                     ),

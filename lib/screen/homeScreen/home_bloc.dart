@@ -6,6 +6,7 @@ import 'package:staging_fox_jek_clone_app/screen/homeScreen/home_screen_repo.dar
 import 'home_screen_dl.dart';
 
 class HomeBloc {
+  /// Declare Variable
   final searchController = TextEditingController();
   final storeListSubject = BehaviorSubject<StoreListSliderModal>();
   final categoryList = BehaviorSubject<CategoryList>();
@@ -15,6 +16,8 @@ class HomeBloc {
   final selectedValue = BehaviorSubject<String>.seeded(AppString.priceHtL);
   final _homeRepo = HomeRepo();
   List<int> favIndex = [];
+
+  /// this is default sorting list
   List<String> sortingList = [
     AppString.sort,
     AppString.openNow,
@@ -23,6 +26,7 @@ class HomeBloc {
     AppString.orderTake,
   ];
 
+  /// this constructor used to get all details
   HomeBloc() {
     getStoreListAndSliderData();
     getCategoryListDetails();
@@ -30,30 +34,37 @@ class HomeBloc {
     getFavoriteDetails();
   }
 
+  /// this method used to get store List and slider data
   getStoreListAndSliderData() async {
     StoreListSliderModal storeListData = await StoreListSliderModal.fromJson(await _homeRepo.getStoreListAndSliderDetails());
     storeListSubject.sink.add(storeListData);
   }
 
+  /// this method used to get Category List Details
   getCategoryListDetails() async {
     CategoryList categoryListData = await CategoryList.fromJson(await _homeRepo.getCategoryList());
     categoryList.sink.add(categoryListData);
   }
+
+  /// this method used to get Food Delivery Details
 
   getFoodDeliveryDetails() async {
     FoodDelivery foodDeliveryData = await FoodDelivery.fromJson(await _homeRepo.getFeatureFoodDelivery());
     foodDelivery.sink.add(foodDeliveryData);
   }
 
+  /// this method used to get Favorite Details
   getFavoriteDetails() async {
     FavoriteModal favoriteModalData = await FavoriteModal.fromJson(await _homeRepo.getFavoriteDetails());
     favoriteList.sink.add(favoriteModalData);
   }
 
+  /// this method used to set Page Index
   setPageIndex(index) {
     pageIndex.sink.add(index);
   }
 
+  /// this method used to select Sorting Values
   selectSortingValues(String index) {
     selectedValue.sink.add(index);
   }
