@@ -1,4 +1,5 @@
 class ApiParameters {
+  /// this is all parameters and static values
   static final applicationAndJson = 'application/json';
   static final asiaCalcutta = 'Asia/Calcutta';
   static final ipAddress = '89.39.107.203';

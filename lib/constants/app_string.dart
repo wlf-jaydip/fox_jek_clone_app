@@ -1,4 +1,5 @@
 class AppString {
+  /// Declare all App String
   static final String yourLocation = 'Your Location';
   static final String searchHint = 'Find Food and Restaurant';
   static final String min = 'Min';
@@ -21,4 +22,13 @@ class AppString {
   static final String ratting = 'Ratting';
   static final String clear = 'Clear';
   static final String applyFilter = 'Apply Filter';
+  static final String userName = 'Jonarth Smith';
+  static final String location = '4km Away';
+  static final String rate = '4.5';
+  static final String totRate = '10';
+  static final String record = '12';
+  static final String beauty = 'Beauty Services';
+  static final String package = 'Package';
+  static final String review = 'Review';
+  static final String Gallery = 'Gallery';
 }

@@ -18,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  /// Declare Variable
   final _homeBloc = HomeBloc();
 
   @override
@@ -29,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// this method used to load all sub widget
   Widget _buildHomeScreen() {
     return SingleChildScrollView(
       child: Column(
@@ -39,14 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildDots(),
           _buildCategoryList(),
           _buildSorting(),
-          _buildFeatureFoodDelivery(),
-          _buildFavoriteList(),
-          _buildNearRestaurant()
+          // _buildFeatureFoodDelivery(),
+          // _buildFavoriteList(),
+          // _buildNearRestaurant()
         ],
       ),
     );
   }
 
+  /// this method used to display search text field
   Widget _buildSearchText() {
     return Container(
         padding: EdgeInsetsDirectional.symmetric(
@@ -83,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.lato(
                     color: AppColors.colorGrey,
-                    fontSize: averageSize * 0.02,
+                    // fontSize: averageSize * 0.02,
                     fontWeight: FontWeight.w400,
                   )),
             )
@@ -91,13 +94,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
+  /// this method used to display Image Slider
   Widget _buildImageSlider() {
     return StreamBuilder(
         stream: _homeBloc.storeListSubject.stream,
         builder: (context, asyncSnapshot) {
-          if (!asyncSnapshot.hasData) {
-            return SizedBox();
-          }
+          // if (!asyncSnapshot.hasData) {
+          //   return SizedBox();
+          // }
           return Container(
             constraints: BoxConstraints(
               maxHeight: deviceHeight * 0.2,
@@ -118,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPageChanged: (index, c) {
                     _homeBloc.setPageIndex(index);
                   }),
-              items: asyncSnapshot.data?.serviceSliderData?.map((items) {
+              items: _homeBloc.sortingList.map((items) {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
@@ -135,10 +139,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             averageSize * 0.028,
                           ),
                           child: Image.network(
-                            items.bannerImage ?? '',
+                            // items.bannerImage ?? '',
+                            'https://picsum.photos/250?image=9',
                             height: deviceHeight * 0.2,
                             width: deviceWidth,
-                            fit: BoxFit.fitHeight,
+                            fit: BoxFit.fitWidth,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
                                 height: deviceHeight * 0.2,
@@ -157,13 +162,14 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
+  /// this method used to display dots of image slider
   Widget _buildDots() {
     return StreamBuilder(
         stream: _homeBloc.storeListSubject.stream,
         builder: (context, asyncSnapshot) {
-          if (!asyncSnapshot.hasData) {
-            return SizedBox();
-          }
+          // if (!asyncSnapshot.hasData) {
+          //   return SizedBox();
+          // }
 
           return Container(
             constraints: BoxConstraints(
@@ -174,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListView.builder(
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
-                itemCount: asyncSnapshot.data?.serviceSliderData?.length ?? 0,
+                itemCount: _homeBloc.sortingList.length ?? 0,
                 itemBuilder: (context, index) {
                   return StreamBuilder(
                       stream: _homeBloc.pageIndex.stream,
@@ -197,13 +203,14 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
+  /// this method used to display category list
   Widget _buildCategoryList() {
     return StreamBuilder(
         stream: _homeBloc.categoryList.stream,
         builder: (context, categorySnapshot) {
-          if (!categorySnapshot.hasData) {
-            return SizedBox.shrink();
-          }
+          // if (!categorySnapshot.hasData) {
+          //   return SizedBox.shrink();
+          // }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -224,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: GoogleFonts.lato(
                     textStyle: TextStyle(
                       color: AppColors.colorBlack,
-                      fontSize: averageSize * 0.027,
+                      // fontSize: averageSize * 0.027,
                       fontWeight: FontWeight.w600,
                       fontStyle: FontStyle.normal,
                     ),
@@ -232,11 +239,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+
+              SizedBox(
+                height: deviceHeight * 0.02,
+              ),
+
               Container(
                 height: averageSize * 0.45,
                 child: GridView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: categorySnapshot.data?.productCategoryList?.length ?? 0,
+                  // itemCount: categorySnapshot.data?.productCategoryList?.length ?? 0,
+                  itemCount: 10,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     childAspectRatio: 1.3,
@@ -244,14 +257,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         CircleAvatar(
                           radius: averageSize * 0.065,
-                          backgroundImage: NetworkImage(
-                            '${categorySnapshot.data?.productCategoryList?[index].categoryIcon ?? ''}',
-                          ),
+                          backgroundImage: NetworkImage('https://picsum.photos/250?image=9'
+                              // '${categorySnapshot.data?.productCategoryList?[index].categoryIcon ?? ''}',
+                              ),
                         ),
                         // Container(
                         //   height: averageSize * 0.13,
@@ -266,41 +279,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         //     fit: BoxFit.fill,
                         //   ),
                         // ),
-                        Flexible(
-                          child: Text('${categorySnapshot.data?.productCategoryList?[index].productCategoryName ?? ''}',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.lato(
-                                color: AppColors.colorBlack,
-                                fontSize: averageSize * 0.017,
-                                fontWeight: FontWeight.w400,
-                              )),
-                        )
+                        Text(
+                            // '${categorySnapshot.data?.productCategoryList?[index].productCategoryName ?? ''}',
+                            index == 2 ? 'Dominos Pizza asdfasdfsafas' : 'ads',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.lato(
+                              color: AppColors.colorBlack,
+                              fontWeight: FontWeight.w400,
+                            )),
                       ],
                     );
                   },
                 ),
               ),
-              // Flexible(
-              //   flex: 0,
-              //   child: Container(
-              //       constraints: BoxConstraints(
-              //         maxHeight: deviceHeight * 0.3,
-              //         minHeight: deviceHeight * 0.1,
-              //       ),
-              //       child: GridView.extent(
-              //           shrinkWrap: true,
-              //           mainAxisSpacing: 10,
-              //           crossAxisSpacing: 10,
-              //           childAspectRatio: 1.0,
-              //           maxCrossAxisExtent: 2,
-              //           semanticChildCount: 2,
-              //           children: [
-              //             Container(color: Colors.red),
-              //             Container(color: Colors.green),
-              //           ])),
-              // )
               // Container(
               //   constraints: BoxConstraints(
               //     maxHeight: deviceHeight * 0.3,
@@ -367,13 +360,14 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
+  /// this method used to display Horizontal Sorting list
   Widget _buildSorting() {
     return StreamBuilder(
         stream: _homeBloc.categoryList.stream,
         builder: (context, sortingSnapshot) {
-          if (!sortingSnapshot.hasData) {
-            return SizedBox.shrink();
-          }
+          // if (!sortingSnapshot.hasData) {
+          //   return SizedBox.shrink();
+          // }
           return Container(
               constraints: BoxConstraints(
                 minHeight: deviceHeight * 0.035,
@@ -656,7 +650,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   fontSize: averageSize * 0.018,
                                                   fontWeight: FontWeight.w400,
                                                 )),
-                                            Icon(Icons.arrow_drop_down_sharp)
+                                            Icon(
+                                              Icons.arrow_drop_down_sharp,
+                                              size: averageSize * 0.022,
+                                              color: AppColors.colorBlack,
+                                            )
                                           ],
                                         ),
                                       )
@@ -672,52 +670,53 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         }),
-                    ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: sortingSnapshot.data?.productCategoryList?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {},
-                            child: Container(
-                              padding: EdgeInsetsDirectional.symmetric(
-                                horizontal: deviceWidth * 0.03,
-                                vertical: deviceHeight * 0.001,
-                              ),
-                              decoration: BoxDecoration(
-                                  color: AppColors.colorWhite,
-                                  border: Border.all(
-                                    color: AppColors.colorBlack,
-                                  ),
-                                  borderRadius: BorderRadiusDirectional.circular(averageSize * 0.05)),
-                              margin: EdgeInsetsDirectional.symmetric(horizontal: averageSize * 0.0081),
-                              child: Center(
-                                child: Text(
-                                  '${sortingSnapshot.data?.productCategoryList?[index].productCategoryName ?? ''}',
-                                  style: GoogleFonts.lato(
-                                    color: AppColors.colorBlack,
-                                    fontSize: averageSize * 0.018,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
+                    // ListView.builder(
+                    //     physics: NeverScrollableScrollPhysics(),
+                    //     shrinkWrap: true,
+                    //     scrollDirection: Axis.horizontal,
+                    //     itemCount: sortingSnapshot.data?.productCategoryList?.length ?? 0,
+                    //     itemBuilder: (context, index) {
+                    //       return InkWell(
+                    //         onTap: () {},
+                    //         child: Container(
+                    //           padding: EdgeInsetsDirectional.symmetric(
+                    //             horizontal: deviceWidth * 0.03,
+                    //             vertical: deviceHeight * 0.001,
+                    //           ),
+                    //           decoration: BoxDecoration(
+                    //               color: AppColors.colorWhite,
+                    //               border: Border.all(
+                    //                 color: AppColors.colorBlack,
+                    //               ),
+                    //               borderRadius: BorderRadiusDirectional.circular(averageSize * 0.05)),
+                    //           margin: EdgeInsetsDirectional.symmetric(horizontal: averageSize * 0.0081),
+                    //           child: Center(
+                    //             child: Text(
+                    //               '${sortingSnapshot.data?.productCategoryList?[index].productCategoryName ?? ''}',
+                    //               style: GoogleFonts.lato(
+                    //                 color: AppColors.colorBlack,
+                    //                 fontSize: averageSize * 0.018,
+                    //                 fontWeight: FontWeight.w400,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       );
+                    //     }),
                   ],
                 ),
               ));
         });
   }
 
+  /// this method used to display feature food delivery
   Widget _buildFeatureFoodDelivery() {
     return StreamBuilder(
         stream: _homeBloc.foodDelivery.stream,
         builder: (context, foodDeliverySnapshot) {
-          if (!foodDeliverySnapshot.hasData) {
-            return SizedBox.shrink();
-          }
+          // if (!foodDeliverySnapshot.hasData) {
+          //   return SizedBox.shrink();
+          // }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -956,6 +955,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
+  /// this method used to display Favorite List
   Widget _buildFavoriteList() {
     return StreamBuilder(
         stream: _homeBloc.favoriteList.stream,
@@ -1274,6 +1274,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
+  /// this method used to display Near Restaurants
   Widget _buildNearRestaurant() {
     return StreamBuilder(
         stream: _homeBloc.storeListSubject.stream,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  /// Declare color
   static final colorWhite = Colors.white;
   static final colorBlack = Colors.black;
   static final colorGrey = Colors.grey;

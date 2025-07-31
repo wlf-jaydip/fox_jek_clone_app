@@ -83,3 +83,31 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(deviceHeight * 0.06);
 }
+
+class CustomBackAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomBackAppBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      shadowColor: AppColors.colorBlack.withValues(alpha: 0.2),
+      elevation: deviceWidth * 0.05,
+      backgroundColor: AppColors.colorWhite,
+      toolbarOpacity: 0.5,
+      surfaceTintColor: AppColors.colorWhite,
+      foregroundColor: AppColors.colorBlack,
+      leadingWidth: averageSize * 0.05,
+      title: Text(
+        AppString.favoriteRes,
+        style: TextStyle(
+          // fontSize: averageSize * 0.03,
+          fontWeight: FontWeight.bold,
+          color: AppColors.colorBlack,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(deviceHeight * 0.06);
+}

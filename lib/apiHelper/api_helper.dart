@@ -1,13 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_pretty_dio_logger/flutter_pretty_dio_logger.dart';
-import 'package:staging_fox_jek_clone_app/apiHelper/api_base_url.dart';
-import 'package:staging_fox_jek_clone_app/apiHelper/api_parameters.dart';
+
+import 'api_base_url.dart';
+import 'api_parameters.dart';
 
 class ApiHelper {
   /// Declare Variable
   final _dio = Dio();
 
+  /// this constructor call when create object of api helper
+  /// after call this constructor to initialize Dio
   ApiHelper() {
     initializeDio();
   }
@@ -15,8 +18,8 @@ class ApiHelper {
   /// this method used to initialize Dio
   initializeDio() {
     _dio.options.baseUrl = ApiBaseUrl.baseUrl;
-    _dio.options.connectTimeout = Duration(seconds: 15);
-    _dio.options.receiveTimeout = Duration(seconds: 15);
+    _dio.options.connectTimeout = Duration(seconds: 10);
+    _dio.options.receiveTimeout = Duration(seconds: 10);
     _dio.options.headers['content-type'] = ApiParameters.applicationAndJson;
     _dio.options.headers['Authorization'] = ApiParameters.applicationAndJson;
     _dio.options.headers['select-time-zone'] = ApiParameters.asiaCalcutta;
@@ -37,8 +40,12 @@ class ApiHelper {
   /// this is all method of Dio to get data from [API]
 
   post(String endPoints, {Map<String, dynamic>? body, Map<String, dynamic>? queryParents}) async {
-    Response response = await _dio.post(endPoints, queryParameters: queryParents, data: body);
-    return response.data;
+    try {
+      Response response = await _dio.post(endPoints, queryParameters: queryParents, data: body);
+      return response.data;
+    } catch (e) {
+      print('.........${e.toString()}');
+    }
   }
 
   get(String endPoints, {Map<String, dynamic>? body, Map<String, dynamic>? queryParents}) async {
